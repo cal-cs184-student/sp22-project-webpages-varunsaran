@@ -1,7 +1,362 @@
-<html>
-	<head>
-	</head>
-	<body>
-		Project 3-1 here
-	</body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<style>
+    div.padded {
+      padding-top: 0px;
+      padding-right: 100px;
+      padding-bottom: 0.25in;
+      padding-left: 100px;
+    }
+  </style>
+<title>Varun Saran, Ze-Ning Ong |  CS 184</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+</head>
+<body>
+<br />
+<h1 align="middle">Assignment 3: PathTracer</h1>
+    <h2 align="middle">Varun Saran, Ze-Ning Ong</h2>
+
+    <div class="padded">
+        <p>In this project, we implemented rendering using pathtracing. In part one, we generated rays, which were the paths that we traced. We also had to be able to tell when rays intersected objects, to represent light bouncing off of objects. We implemented this object intersection in part 1 as well. Our biggest issue here was forgetting to normalize all of our vectors. Outside of that, we just followed the spec closely.</p>
+        <p>In part 2, we created a BVH to speedup intersection tests, which allowed us to render images much more quickly. This let us render and test other parts in the project without waiting for years. This part took us a long time because it was incredibly difficult to debug. We thought our implementation was correct because our Part 2 looked like it worked. However, we got stuck in Part 3 for a long time before realizing that the issue was a typo in Part 2. We finally fixed this issue by very carefully going over the code and reading it out loud, which helped us find the typo.</p>
+        <p>In part 3, we worked on direct illumination, starting with zero_bounce_radiance, which simply showed the light source. This took us a really long time because of a bug in Part 2. Then we wrote two different ways to calculate direct lighting for each pixel. We did Uniform Hemisphere sampling, as well as Importance sampling. Piazza helped us a lot with our implementation of Hemisphere, and Importance built off of Hemisphere.</p>
+        <p>In part 4, we learned how to render images with indirect lighting. We approached this with our direct lighting functions in mind, which helped us write the body of the function. The hardest part here was understanding how to recurse and how to integrate the Monte Carlo estimator into the recursion. </p>
+        <p>Part 5 was Adaptive Sampling, which allows us to sample more times in harder areas of the image, and be more efficient in simpler parts. We followed the spec very carefully, and this part was pretty straightforward with that.</p>
+    <o>
+            <h2 align="middle">Part 1: Ray Generation and Intersection</h2>
+            <p>
+                In ray generation, we use a model where light travels in rays from light sources to the eye. A ray can bounce off of many different surfaces at different angles, and some may not be relevant to what we see in an image, or what we want to render. What we can do with ray generation is generate rays for each pixel in the image. As we generate the ray, we can later check for bounces and intersections to create shadows.
+                In Tasks 1 and 2, we created generate_ray, which converts image coordinates to coordinates in camera space, and then create a ray. Finally, we end up with a new ray that starts at the position of the camera, and goes through the desired coordinate in world space. Finally, we implemented raytrace_pixel, which generates pixel samples by calling generate_ray several times, and then averages the illumination of each of those rays to estimate the value of the pixel itself.
+            </p>
+            <p>For triangle intersection, we used the Möller Trumbore algorithm. </p>
+            <div align="center">
+                <table style="width=100%">
+                    <tr>
+                        <td align="middle">
+                            <img src="images/moller.png" width="480px" />
+                            <figcaption align="middle">Here is the equation we used from lecture. </figcaption>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <p>After typing in this equation, we used the t value in the resulting vector to determine whether or not the ray had intersected the triangle. If it is between the min_t and max_t, that is, somewhere along the ray, then we updated the values of the intersection. Otherwise, no intersection occured.</p>
+            <p>Below are some images with normal shading. </p>
+            <div align="center">
+                <table style="width=100%">
+                    <tr>
+                        <td align="middle">
+                            <img src="images/1-banana.png" width="360" />
+                            <figcaption align="middle">Banana</figcaption>
+                        </td>
+                        <td align="middle">
+                            <img src="images/1-CBspheres.png" width="360" />
+                            <figcaption align="middle">CBspheres</figcaption>
+                        </td>
+
+                        <td align="middle">
+                            <img src="images/1-CBcoil.png" width="360" />
+                            <figcaption align="middle">CBcoil</figcaption>
+                          </td>
+                    </tr>
+                    <tr>
+
+                      <td align="middle">
+                          <img src="images/1-cow-45s.png" width="360" />
+                          <figcaption align="middle">cow (45s to render)</figcaption>
+                      </td>
+
+                      <td align="middle">
+                          <img src="images/1-teapot-13s.png" width="360" />
+                          <figcaption align="middle">teapot (13s to render)</figcaption>
+                      </td>
+                      <td align="middle">
+                          <img src="images/1-bunny-472s.png" width="360" />
+                          <figcaption align="middle">Bunny (472s to render)</figcaption>
+                      </td>
+
+                    </tr>
+
+                </table>
+            </div>
+
+
+
+
+            <h2 align="middle">Part 2: Bounding Volume Hierarchy</h2>
+            <p>
+                To construct the bvh, we start by looping through all the primitives in the given list to calculate the average centroid by summing over the centroids of all the primitives. We also create a new bounding box, that is the union of the bounding boxes of all the individual primitives (we keep expanding our new bbox). If the number of primitives in the given list is less than the max_leaf_size, then this bvh is a leaf node and we are done. Otherwise, we need to split the given list into 2. To do this, we split the primitives based on their centroid’s x/y/z position. We calculated the split point by finding the longest axes of the bbox. If the bbox is biggest in the x axes, then we just check if the primitive’s centroid’s x position is less than or greater than the x position of the midpoint of the x axes of the bbox. In this way, we ensure that there is always a split, and we never have a case where all primitives are put in the left node and none in the right (or vice versa).
+                After splitting the list into 2, we simply recursively called the construct_bvh function to create the left and right bvh nodes on the 2 sub-lists of primitives. C++’s partition function made this pretty straightforward as it set up all the iterators and did the reordering during the split for us.
+            </p>
+            <p>The rendering times go down significantly with this new BVH acceleration. Rendering cow took 45 seconds, teapot took 13s, and bunny took 472s to render using our code from part 1 (without bvh acceleration). After part 2, these numbers went down to 0.12s, 0.1s, and 2.3s respectively. This is a 200x speedup for the bunny image, and 375x speedup for cow, 130x speedup for the teapot. Clearly, this is great acceleration and makes rendering big images a lot faster. All times are based on running on my personal Mac, not the Hive.</p>
+            <p>
+              Here are some images with normal shading, on large .dae files (and their runtime):
+            </p>
+            <div align="center">
+                <table style="width=100%">
+                    <tr>
+
+                        <td align="middle">
+                            <img src="images/2-dragon-0.12s.png" width="480" />
+                            <figcaption align="middle">Dragon (0.12s to render)</figcaption>
+                        </td>
+                        <td align="middle">
+                            <img src="images/2-lucy-0.15s.png" width="480" />
+                            <figcaption align="middle">Lucy (0.15s to render)</figcaption>
+                        </td>
+                    </tr>
+                    <tr>
+                      <td align="middle">
+                          <img src="images/2-maxplanck-0.04s.png" width="480" />
+                          <figcaption align="middle">Max Planck (0.04s to render)</figcaption>
+                      </td>
+                      <td align="middle">
+                          <img src="images/2-blob-0.14s.png" width="480" />
+                          <figcaption align="middle">Blob (0.14s to render)</figcaption>
+                      </td>
+                    </tr>
+                </table>
+            </div>
+
+
+            <h2 align="middle">Part 3: Direct Illumination</h2>
+            <p>In Part 3, we implemented both direct lighting with uniform hemisphere sampling, as well as direct lighting by importance sampling. </p>
+            <p>We first implemented zero_bounce_radiance, which simply returns an image that shows only the light source. We used get_emission() to achieve this. We also set the radiance for diffuse objects to be reflectance / PI, since diffuse objects have the same radiance from all angles.</p>
+            <p>In uniform hemisphere sampling, we sampled uniformly from a hemisphere for each point. We used the hemisphere sampler to retrieve a random vector in object space, which we converted to a world space ray. Then we checked if the ray intersected with an object. If it did, then we added the light from that light source using a Monte Carlo estimator, which was shown in lecture and in the spec. Finally, we normalized by the number of samples we took to get the average radiance. </p>
+            <div align="center">
+                <table style="width=100%">
+                    <tr>
+                        <td align="middle">
+                            <img src="images/montecarlo.png" width="480px" />
+                            <figcaption align="middle">Here is the estimator we used.</figcaption>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <p>In this case, our probability density was 1/2π because we were sampling from a hemisphere. Note that in this function, we only dealt with direct illumination, which means that each ray's depth was only 1.</p>
+            <p>We also implemented importance sampling. For this, we sampled from each of the light sources directly instead of uniformly from the hemisphere around a point. This is more efficient than hemisphere sampling. In our function, we iterated through all of the lights. First, we checked if the light was as point light source. If it was, then we only sampled once, since all samples from a point light have the same radiance.</p>
+            <p>For all samples, we used sample_L, which provided us a pdf, wi, distToLight, and the radiance. We created a ray based off of this. This time, instead of checking if the ray intersected with a light source, we cast a ray between the hit point and the light source. Then we checked to make sure that there was no object between the two, and if that was true, then we could add the light from that light source as in the previous task. We also made sure to normalize the final radiance by the number of samples.  </p>
+
+            <div align="center">
+                <table style="width=100%">
+                    <tr>
+                        <td align="middle">
+                            <img src="images/3-bunny-hemisphere.png" width="360" />
+                            <figcaption align="middle">Uniform Hemisphere Sampling</figcaption>
+                        </td>
+                        <td align="middle">
+                            <img src="images/3-bunny-importance.png" width="360" />
+                            <figcaption align="middle">Importance Sampling</figcaption>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td align="middle">
+                            <img src="images/3-lucy-hemishpere.png" width="360" />
+                            <figcaption align="middle">Uniform Hemisphere Sampling</figcaption>
+                        </td>
+                        <td align="middle">
+                            <img src="images/3-lucy-importance.png" width="360" />
+                            <figcaption align="middle">Importance Sampling</figcaption>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+            <p>The hemisphere sampling pictures are more noisy than improtance sampling. This is because in uniform hemisphere sampling, we look at rays pointing from the hit point in many different random directions within a hemisphere. Only some rays will intersect with a light source, which produces the black spots we see in the image. In comparison, importance sampling samples only from light sources, so we know that rays we sample actually contribute to the light casted on the image or object. This results in a much smoother and cleaner render.</p>
+
+
+
+            <p> Here is the same scene, renderred with varying light rays using importance sampling: </p>
+
+            <div align="center">
+                <table style="width=100%">
+                    <tr>
+                        <td align="middle">
+                            <img src="images/3-dragon-l=1.png" width="360" />
+                            <figcaption align="middle">L=1</figcaption>
+                        </td>
+                        <td align="middle">
+                            <img src="images/3-dragon-l=2.png" width="360" />
+                            <figcaption align="middle">L=2</figcaption>
+                        </td>
+                        <td align="middle">
+                            <img src="images/3-dragon-4.png" width="360" />
+                            <figcaption align="middle">L=4</figcaption>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td align="middle">
+                            <img src="images/3-dragon-l=16.png" width="360" />
+                            <figcaption align="middle">L=16</figcaption>
+                        </td>
+                        <td align="middle">
+                            <img src="images/3-dragon-l=64.png" width="360" />
+                            <figcaption align="middle">L=64</figcaption>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+
+
+            <h2 align="middle">Part 4: Global Illumination</h2>
+            <p>Indirect lighting accounts for rays that have multiple bounces off of different objects, not just rays that come directly from the light source. In order to do this, we created a recursive function. The actual body of the recursive case is very similar to how we did direct lighting. We created a ray using sample_f, and if it intersected an object, we called one_bounce_radiance on that ray and added it to calling our indirect_lighting function again. When we called indirect_lighting again, we made sure to reduce the ray depth by one, and use the same Monte Carlo estimator we were using before. The reason for this is that at each step of the recursive function, we reduce the size of the ray by one segment. We call one_bound_radiance on one segment, and then call indirect_lighting on the rest of the ray until the depth of the ray is only one, where we can just return one_bounce_radiance. </p>
+            <p>We also implemented Russian Roulette, which is a way of figuring out when rays should stop bouncing. This is because some rays could be bouncing in between objects indefinitely. We used the coin_flip function to randomly return true with a 40% probability. If it was true, we simply called one_bounce_radiance on that ray, stopping it from calculating more bounces. We also adjusted our  Monte Carlo estimator by 0.6 to account for this.</p>
+
+
+            <p> Here are some images rendered with global illumination, and 1024 samples per pixel </p>
+
+            <div align="center">
+                <table style="width=100%">
+                    <tr>
+                        <td align="middle">
+                            <img src="images/4-dragon-global-1024.png" width="360" />
+                            <figcaption align="middle">dragon</figcaption>
+                        </td>
+                        <td align="middle">
+                            <img src="images/4-spheres-global-1024.png" width="360" />
+                            <figcaption align="middle">spheres</figcaption>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+
+<p> Here is the spheres scene, first with only direct illumination, and then with only indirect illumination (both with 1024 samples per pixel). A combination of these 2 results in global illumination. </p>
+<div align="center">
+    <table style="width=100%">
+        <tr>
+            <td align="middle">
+                <img src="images/4-spheres-direct.png" width="360" />
+                <figcaption align="middle">direct lighting</figcaption>
+            </td>
+            <td align="middle">
+                <img src="images/4-spheres-indirect.png" width="360" />
+                <figcaption align="middle">indirect lighting</figcaption>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<p> Here is CBbunny.dae, rendered with varying max_ray_depths and all with 1024 samples per pixel. </p>
+<div align="center">
+    <table style="width=100%">
+        <tr>
+            <td align="middle">
+                <img src="images/4-bunny-m=0.png" width="360" />
+                <figcaption align="middle">m=0</figcaption>
+            </td>
+            <td align="middle">
+                <img src="images/4-bunny-m=1.png" width="360" />
+                <figcaption align="middle">m=1</figcaption>
+            </td>
+            <td align="middle">
+                <img src="images/4-bunny-m=2.png" width="360" />
+                <figcaption align="middle">m=2</figcaption>
+            </td>
+        </tr>
+        <tr>
+          <td align="middle">
+              <img src="images/4-bunny-m=3.png" width="360" />
+              <figcaption align="middle">m=3</figcaption>
+          </td>
+          <td align="middle">
+              <img src="images/4-bunny-m=100.png" width="360" />
+              <figcaption align="middle">m=100</figcaption>
+          </td>
+        </tr>
+    </table>
+</div>
+
+<p> And now we compare the CBspheres scence with various sample-per-pixel rates (all with 4 light rays) </p>
+
+<div align="center">
+    <table style="width=100%">
+        <tr>
+            <td align="middle">
+                <img src="images/4-spheres-s=1.png" width="360" />
+                <figcaption align="middle">s=1</figcaption>
+            </td>
+            <td align="middle">
+                <img src="images/4-spheres-s=2.png" width="360" />
+                <figcaption align="middle">s=2</figcaption>
+            </td>
+            <td align="middle">
+                <img src="images/4-spheres-s=4.png" width="360" />
+                <figcaption align="middle">s=4</figcaption>
+            </td>
+            <td align="middle">
+                <img src="images/4-spheres-s=8.png" width="360" />
+                <figcaption align="middle">s=8</figcaption>
+            </td>
+        </tr>
+
+        <tr>
+            <td align="middle">
+                <img src="images/4-spheres-s=16.png" width="360" />
+                <figcaption align="middle">s=16</figcaption>
+            </td>
+            <td align="middle">
+                <img src="images/4-spheres-s=64.png" width="360" />
+                <figcaption align="middle">s=64</figcaption>
+            </td>
+            <td align="middle">
+                <img src="images/4-spheres-s=1024.png" width="360" />
+                <figcaption align="middle">s=1024</figcaption>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+            <h2 align="middle">Part 5: Adaptive Sampling</h2>
+            <p>In Part 5, we implemented adaptive sampling. Instead of using the same number of samples per pixel, adaptive sampling targets more samples towards more complicated parts of the image. This is much more efficient than using a high number of samples for all parts of the image. To implement this, we used the equations given in the spec. Conecptually, if the variance of a pixel's samples is very small, then we know that the pixel has probably already converged, or is not very difficult to calculate the lighting for. So, after tracing some samples through a pixel, if the variance is small enough, we can just stop sampling that pixel. Below are the equations we used to actually code this task.</p>
+            <p>After we had sampled SamplesPerBatch number of times, we calculated a value I as below. If I was smaller than a certain value, we stopped sampling. </p>
+            <div align="center">
+                <table style="width=100%">
+                    <tr>
+                        <td align="middle">
+                            <img src="images/5-s.png" width="200px" />
+                            <figcaption align="middle">Variables we kept track of while sampling</figcaption>
+                        </td>
+                        <td align="middle">
+                            <img src="images/5-u.png" width="200px" />
+                            <figcaption align="middle">Equations used to calculate I</figcaption>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="middle">
+                            <img src="images/5-I.png" width="200px" />
+                            <figcaption align="middle">Calculating I</figcaption>
+                        </td>
+                        <td align="middle">
+                            <img src="images/5-maxtol.png" width="200px" />
+                            <figcaption align="middle">If this equation is true, then we stop sampling</figcaption>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <p> Finally, here is the CBbunny scene, rendered with 2048 samples per pixel. First we see the noise-free rendered result, and then we can
+              see the sampling rate image, where there are clear differences in the sampling rate over various regions and pixels. </p>
+              <div align="center">
+                  <table style="width=100%">
+                      <tr>
+                          <td align="middle">
+                              <img src="images/bunny_part5_no_russian.png" width="360" />
+                              <figcaption align="middle">result</figcaption>
+                          </td>
+                          <td align="middle">
+                              <img src="images/bunny_part5_no_russianrate.png" width="360" />
+                              <figcaption align="middle">sampling rate</figcaption>
+                          </td>
+                      </tr>
+                  </table>
+              </div>
+
+        </o></div>
+</body>
 </html>
