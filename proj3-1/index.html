@@ -19,6 +19,8 @@
     <h2 align="middle">Varun Saran, Ze-Ning Ong</h2>
 
     <div class="padded">
+<p>
+This writeup can be found at https://cal-cs184-student.github.io/sp22-project-webpages-varunsaran/proj3-1/index.html </P>
         <p>In this project, we implemented rendering using pathtracing. In part one, we generated rays, which were the paths that we traced. We also had to be able to tell when rays intersected objects, to represent light bouncing off of objects. We implemented this object intersection in part 1 as well. Our biggest issue here was forgetting to normalize all of our vectors. Outside of that, we just followed the spec closely.</p>
         <p>In part 2, we created a BVH to speedup intersection tests, which allowed us to render images much more quickly. This let us render and test other parts in the project without waiting for years. This part took us a long time because it was incredibly difficult to debug. We thought our implementation was correct because our Part 2 looked like it worked. However, we got stuck in Part 3 for a long time before realizing that the issue was a typo in Part 2. We finally fixed this issue by very carefully going over the code and reading it out loud, which helped us find the typo.</p>
         <p>In part 3, we worked on direct illumination, starting with zero_bounce_radiance, which simply showed the light source. This took us a really long time because of a bug in Part 2. Then we wrote two different ways to calculate direct lighting for each pixel. We did Uniform Hemisphere sampling, as well as Importance sampling. Piazza helped us a lot with our implementation of Hemisphere, and Importance built off of Hemisphere.</p>
