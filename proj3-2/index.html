@@ -1,7 +1,105 @@
-<html>
-	<head>
-	</head>
-	<body>
-		Project 3-2 here
-	</body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<style>
+    div.padded {
+      padding-top: 0px;
+      padding-right: 100px;
+      padding-bottom: 0.25in;
+      padding-left: 100px;
+    }
+  </style>
+<title>Your Name  |  CS 184</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+</head>
+<body>
+<br />
+<h1 align="middle">Assignment 3: PathTracer</h1>
+    <h2 align="middle">Your Name</h2>
+
+    <div class="padded">
+        <p>Use this section to write an overview of the assignment. All of the text in your write-up should be <em>in your own words</em>. If you need to add additional HTML features to this document, you can search the <a href="http://www.w3schools.com/">http://www.w3schools.com/</a> website for instructions. To edit the HTML, you can just copy and paste existing chunks and fill in the text and image file names appropriately.</p>
+        <o>The website writeup is intended to be a self-contained walkthrough of the assignment: we want this to be a piece of work which showcases your understanding of relevant concepts through both mesh images as well as written explanations about what you did to complete each part of the assignment. Try to be as clear and organized as possible when writing about your own output files or extensions to the assignment. We want to understand what you've achieved and how you've done it!</p>
+        <p>If you are well-versed in web development, feel free to ditch this template and make a better looking page. Just make sure that you include all the components as we've laid them out here. </p>
+
+    <h2 align="middle">Part 2: Microfacet Material</h2>
+        <p>
+
+        </p>
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="images/dragon_0.005.png" width="480px" />
+                    <figcaption align="middle">alpha = 0.005</figcaption>
+                  </td>
+                  <td align="middle">
+                    <img src="images/dragon_0.05.png" width="480px" />
+                    <figcaption align="middle">alpha = 0.05</figcaption>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td align="middle">
+                    <img src="images/dragon_0.25.png" width="480px" />
+                    <figcaption align="middle">alpha = 0.25</figcaption>
+                  </td>
+                  <td align="middle">
+                    <img src="images/dragon_0.5.png" width="480px" />
+                    <figcaption align="middle">alpha = 0.5</figcaption>
+                  </td>
+                </tr>
+
+            </table>
+        </div>
+
+        <p>
+The lowest alpha is the most reflective, shiny, and glossy because low alphas represent low roughness. It also has the most noise. As alpha increases,
+the materials roughness increases, and it becomes less reflective and shiny. The noise does decrease, but the surface also becomes more difffuse.
+The more glossy image is a lot more appealing to look at.
+        </p>
+
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="images/bunny.png" width="480px" />
+                    <figcaption align="middle">Importance sampling</figcaption>
+                  </td>
+                  <td align="middle">
+                    <img src="images/bunny-hemisphere.png" width="480px" />
+                    <figcaption align="middle">Hemisphere sampling</figcaption>
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+
+<p>
+  Hemisphere sampling is alot more noisy and dark, and it really detracts from the image. Importance sampling still has some noise, but the low-density white specks are
+  a lot less noticeable than the high-density black regions from hemisphere sampling.
+</p>
+
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="images/bunny_cu.png" width="480px" />
+                    <figcaption align="middle">Normal copper bunny</figcaption>
+                  </td>
+                  <td align="middle">
+                    <img src="images/bunny_but_Al.png" width="480px" />
+                    <figcaption align="middle">Quirky Aluminum bunny</figcaption>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <p>
+          On the left is the usual Copper bunny. For the right image, we changed eta and k to values corresponding to Aluminum.
+        </p>
+
+
+</div>
+</body>
 </html>
