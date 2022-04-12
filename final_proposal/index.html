@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<style>
+    div.padded {
+      padding-top: 0px;
+      padding-right: 100px;
+      padding-bottom: 0.25in;
+      padding-left: 100px;
+    }
+  </style>
+<title>CS 184</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+</head>
+<body>
+<br />
+<h1 align="middle">Final Project Proposal - Animation using Spatial Keyframing</h1>
+    <h2 align="middle">Andrew Chen, Noah Schwartz, Varun Saran, Ze-Ning Ong</h2>
+
+    <div class="padded">
+  <p>This writeup can be found at: https://cal-cs184-student.github.io/sp22-project-webpages-varunsaran/final_proposal/index.html</p>
+      <p><b>Summary: We will focus on developing Animations, where we will model many animals at various frames, and interpolate through the frames to create the animation of a cheerful gathering of animal life in nature.</b>
+</p>
+
+
+<h2 align="middle">Problem Description</h2>
+          <p><b>Here you should provide the context for your idea. Describe the problem that you are trying to solve, why it is important, where it is challenging. Give us a general idea on how you are going to solve it.</b></p>
+      <p>We are working on the “Animation using spatial keyframing” project that was given in the list of potential project ideas. We really like working with animations and thought this was a unique method of animating things. Usually, animations use temporal keyframes, but this idea uses spatial keyframes so motion looks more fluid without needing motion capture devices. We hope to use this idea of spatial keyframing to make some cute animations of non-human characters.</p>
+
+
+<h2 align="middle">Goals and Deliverables</h2>
+<p><b>If you are working on an interactive system, describe what demo you will create</p></b>
+<p>Our demo will include the user being able to move joint positions to set multiple keyframes, and then moving their mouse (or some other input device) to control the character. As the user moves their mouse, the system will automatically interpolate between the previously set keyframes to make new scenes.</p>
+
+
+<p><b>Define how you will measure the quality / performance of your system (e.g. graphs showing speedup, or quantifying accuracy). It may not be possible to define precise target metrics at this time, but we encourage you to try.</p></b>
+<p>We will try to make the animation look smooth to the human eye – the model should not jolt or pause between each keyframe</p>
+
+
+
+<p><b>What questions do you plan to answer with your analysis?
+You should break this section into two parts: (1) what you plan to deliver, and (2) what you hope to deliver. In (1), describe what you believe you must accomplish to have a successful project and achieve the grade you expect (i.e. your baseline plan -- planning for some unexpected problems would make sense). In (2), describe what you hope to achieve if things go well and you get ahead of schedule (your aspirational plan).</p>
+</b>
+<p>1) To be successful, we must be able to create smooth movements between different keyframes that have different joint positions. We should be able to do this with interpolation, and have the animation look smooth. This animation should work for many different models, and we should be able to create animations for different animals. The basic case doesn’t need live user input. Instead we will pre-load a set of 3D positions (each one defining the next control point) and it will automatically interpolate between each control point.</p>
+<p>2) If things go well, we plan to add live user input, so the user can control the animation by moving a control point using their mouse. This way, it’s more interactive and easier to make future animations. But this also adds a considerable amount of work because we would need to design our own interactive software system.</p>
+
+
+<h2 align="middle">Schedule</h2>
+
+<p>
+  <b>In this section you should organize and plan the tasks and subtasks that your team will execute. Since presentations are ~4 weeks from the due-date of the proposal, you should include a set of tasks for every week.</b>
+<br>
+Week 1 (4/11/2022 - 4/217/2022): Model and/or import all the assets we want to use.
+<br>
+First Half of Week 2 (4/17/2022 - 4/20/2022): Figuring out whether we can use existing software like Blender or whether we need to create our own interactive system that can deal with joint-based 3D models
+
+<br>
+Second Half of Week 2 (4/20/2022 - 4/24/2022): Interpolation of joint angles/positions between multiple keyframes
+<br>
+Week 3 (4/24/2022 - 5/1/2022): Creating our final scene with our animals moving in the animation.
+<br>
+Week 4 (5/1/2022 - 5/5/2022): Touching up on our scene and formalizing our design into a presentation to submit.
+
+</p>
+
+<h2 align="middle">Resources</h2>
+
+<a href="https://www.youtube.com/watch?v=aQICU6gy-bY" target="_blank" >https://www.youtube.com/watch?v=aQICU6gy-bY</a>
+<br><a href="https://www-ui.is.s.u-tokyo.ac.jp/~takeo/papers/squirrel.pdf" target="_blank"> https://www-ui.is.s.u-tokyo.ac.jp/~takeo/papers/squirrel.pdf</a>
+<br><a href="https://www.dgp.toronto.edu/~ravin/papers/siggraph2007_spatialkeyframing.pdf" target="_blank"> https://www.dgp.toronto.edu/~ravin/papers/siggraph2007_spatialkeyframing.pdf</a>
+<br><a href="https://www.youtube.com/watch?v=7b5kUlhNS4o" target="_blank"> https://www.youtube.com/watch?v=7b5kUlhNS4o</a>
+<br><a href="https://www.autodesk.com/campaigns/makegames/create" target="_blank"> https://www.autodesk.com/campaigns/makegames/create</a>
+<br><a href="http://www.individual.utoronto.ca/imordatch/CSC490/" target="_blank"> http://www.individual.utoronto.ca/imordatch/CSC490/</a>
+<br><a href="https://zh.coursera.org/lecture/interactive-computer-graphics/4-3-spatial-key-framing-gQPxL" target="_blank"> https://zh.coursera.org/lecture/interactive-computer-graphics/4-3-spatial-key-framing-gQPxL</a>
+
+  </div>
+</body>
+</html>
+
+
+
+</div>
+</body>
+</html>
