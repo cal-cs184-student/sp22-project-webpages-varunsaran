@@ -19,8 +19,16 @@
     <h2 align="middle">Andrew Chen, Noah Schwartz, Varun Saran, Ze-Ning Ong</h2>
 
     <div class="padded">
-  <p>This writeup can be found at: https://cal-cs184-student.github.io/sp22-project-webpages-varunsaran/final_milestone/index.html</p>
-  <p> Our slides can be found at: https://docs.google.com/presentation/d/1_ARIbFg_p465IU4MrP91RIG6hcX7u8dO6dQtz9qdGOw/edit?usp=sharing</p>
+  <p>This writeup can be found at:
+
+  <a href="https://cal-cs184-student.github.io/sp22-project-webpages-varunsaran/final_milestone/index.html" target="_blank" >https://cal-cs184-student.github.io/sp22-project-webpages-varunsaran/final_milestone/index.html</a>
+</p>
+
+  <p> Our slides can be found at:
+<a href="https://docs.google.com/presentation/d/1_ARIbFg_p465IU4MrP91RIG6hcX7u8dO6dQtz9qdGOw/edit?usp=sharing" target="_blank" >https://docs.google.com/presentation/d/1_ARIbFg_p465IU4MrP91RIG6hcX7u8dO6dQtz9qdGOw/edit?usp=sharing</a></p>
+
+<p> Our video summary of our progress can be found here:
+  <a href="https://drive.google.com/file/d/1RdlYjeIV0wGyI0MReRUfwwpsMau9Wgr_/view?usp=sharing " target="_blank" >https://drive.google.com/file/d/1RdlYjeIV0wGyI0MReRUfwwpsMau9Wgr_/view?usp=sharing </a></p>
 
       <p><b>Summary: Our project was to build an interactive system in Unity for spatial keyframing. Instead of the usual temporal keyframing that is used in animations, we are doing spatial keyframing.</b></p>
 
@@ -34,6 +42,61 @@
 
 </p>
 
+<p>
+
+  <div align="center">
+      <table style="width=100%">
+          <tr>
+              <td align="middle">
+                  <img src="1.png" width="650" />
+                  <figcaption align="middle">the goal: interpolate between known keyframes</figcaption>
+              </td>
+            </tr>
+          </table>
+          <table style="width=100%">
+            <tr>
+              <td align="middle">
+                  <img src="2.png" width="200" />
+                  <figcaption align="middle">cubeman model we made from scratch, with limbs as joints</figcaption>
+              </td>
+
+              <td align="middle">
+                  <img src="3.png" width="200" />
+                  <figcaption align="middle">fancy, rigged model with joints</figcaption>
+              </td>
+            </tr>
+
+            </table>
+            <table style="width=100%">
+              <tr>
+              <td align="middle">
+                  <img src="6.png" width="650" />
+                  <figcaption align="middle">our keyframe struct saving a list of joint angles for a given control_cursor position</figcaption>
+              </td>
+          </tr>
+        </table>
+        <table style="width=100%">
+          <tr>
+            <td align="middle">
+                <img src="5.png" width="650" />
+                <figcaption align="middle">The left keyframe (left sphere), with character pose facing left</figcaption>
+            </td>
+
+            <td align="middle">
+                <img src="4.png" width="650" />
+                <figcaption align="middle">The right keyframe (right sphere), with character pose facing right</figcaption>
+            </td>
+          </tr>
+      </table>
+  </div>
+  <p> The next steps are to let the user move the control cursor to new places on the 2D plane, and use existing keyframes to interpolate joint angles. For example a control cursor
+    in the middle of the 2 red spheres above should result in the character facing straight ahead, because that is the result of averaging each joint position from the left and right keyframes.
+  </p>
+
+  <p>
+    For setting and switching between keyframes, we first edited our 3D model in the Unity Editor mode, where we rotated each joint to form left and right poses for our character. We then wrote a script which would, on start, recursively go through the model and each of its child objects, and save every angle as a list of 3D vector rotational degrees. We then saved that list to a .json file, so that our key frame angles would persist after terminating the program. We repeat this process for each key frame we wish to define.
+When we're done (we just made two key frames so far, "Left" and "Right"), we can switch between them by clicking on the desired keyframe (the red spheres). For the keyframe we click, our script extracts the saved key frame file corresponding to the direction we want, and updates each of the joint angles of our model to match. Our next goal is to code the interpolation algorithm, so that we may see a fluid transition between key frames rather than the shark transition we have now.
+</p>
 
 
 
