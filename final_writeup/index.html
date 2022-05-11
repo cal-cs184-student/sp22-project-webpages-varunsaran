@@ -19,14 +19,35 @@
     <h2 align="middle">Andrew Chen, Noah Schwartz, Varun Saran, Ze-Ning Ong</h2>
 
     <div class="padded">
+
+      <h2 align="middle">Abstract</h2>
+            <p><b>Our project is based on a previous spatial keyframing project that can be found here:
+      <a href="https://www-ui.is.s.u-tokyo.ac.jp/~takeo/research/squirrel/index.html" target="_blank" >https://www-ui.is.s.u-tokyo.ac.jp/~takeo/research/squirrel/index.html</a>.
+       Although our program has the same functionality, our structure and interpolation methods are different and we did not use any starter code. We designed our program in Unity, starting with a scene entirely from scratch, and imported character models from Mixamo and the Unity Asset Store. There are three main parts we coded for our project: keyframes, cursor control, and interpolation.
+      </b></p>
+      <br>
+
   <p>This writeup can be found at:
 <a href="https://cal-cs184-student.github.io/sp22-project-webpages-varunsaran/final_writeup/index.html" target="_blank" >https://cal-cs184-student.github.io/sp22-project-webpages-varunsaran/final_writeup/index.html</a>
     </p>
-<h2 align="middle">Abstract</h2>
-      <p><b>Our project is based on a previous spatial keyframing project that can be found here:
-<a href="https://www-ui.is.s.u-tokyo.ac.jp/~takeo/research/squirrel/index.html" target="_blank" >https://www-ui.is.s.u-tokyo.ac.jp/~takeo/research/squirrel/index.html</a>.
- Although our program has the same functionality, our structure and interpolation methods are different and we did not use any starter code. We designed our program in Unity, starting with a scene entirely from scratch, and imported character models from Mixamo and the Unity Asset Store. There are three main parts we coded for our project: keyframes, cursor control, and interpolation.
-</b></p>
+
+    <p>
+Our final project video can be found at:
+<a href="https://www.youtube.com/watch?v=cvh4tJHQiFY" target="_blank" >https://www.youtube.com/watch?v=cvh4tJHQiFY</a>
+    </p>
+<p> Our presentation slides can be found at:
+<a href="https://docs.google.com/presentation/d/1_ARIbFg_p465IU4MrP91RIG6hcX7u8dO6dQtz9qdGOw/edit#slide=id.g12735c879ef_3_0" target="_blank" >https://docs.google.com/presentation/d/1_ARIbFg_p465IU4MrP91RIG6hcX7u8dO6dQtz9qdGOw/edit#slide=id.g12735c879ef_3_0</a>
+</p>
+
+<p> Our project proposal is at:
+<a href="https://cal-cs184-student.github.io/sp22-project-webpages-varunsaran/final_proposal/index.html" target="_blank" >https://cal-cs184-student.github.io/sp22-project-webpages-varunsaran/final_proposal/index.html</a>
+</p>
+
+  <p> Our project milestone writeup is at:
+    <a href="https://cal-cs184-student.github.io/sp22-project-webpages-varunsaran/final_milestone/index.html" target="_blank" >https://cal-cs184-student.github.io/sp22-project-webpages-varunsaran/final_milestone/index.html</a>
+  </p>
+
+
 
 
 <h2 align="middle">Technical Approach</h2>
@@ -139,13 +160,13 @@
         <td align="middle">
             <img src="results/fish.gif" width="640" height="480"></img>
             <figcaption align="middle">In all the previous examples, we only interpolated over joint angles. Now, we also add position. The left and right keyframes control the fish's position, and the top and
-              bottom keyframes control the joint angles. A 2D sinusoidal movement of the red control cursor makes it look like the fish is actually swimming.</figcaption>
+              bottom keyframes control the joint angles. A 2D sinusoidal movement of the red control cursor makes it look like the fish is actually swimming. We really like this result because it highlights
+            the advantages of spatial keyframing. It was really simple to setup — its only 4 keyframes, it didn’t require synchronizing the angles with the translation when setting up keyframes, and took
+             advantage of the 2D cursor control (by separately interpolating angles and positions). With conventional temporal key framing, none of this is possible. </figcaption>
+
         </td>
     </tr>
     <tr>
-
-
-
 
       </table>
   </div>
@@ -154,14 +175,13 @@
 
 
 <h2 align="middle">References</h2>
-
-<br><a href="https://www-ui.is.s.u-tokyo.ac.jp/~takeo/papers/squirrel.pdf" target="_blank"> https://www-ui.is.s.u-tokyo.ac.jp/~takeo/papers/squirrel.pdf</a>
+<a href="https://www-ui.is.s.u-tokyo.ac.jp/~takeo/papers/squirrel.pdf" target="_blank"> https://www-ui.is.s.u-tokyo.ac.jp/~takeo/papers/squirrel.pdf</a>
 <br><a href="https://www.dgp.toronto.edu/~ravin/papers/siggraph2007_spatialkeyframing.pdf" target="_blank"> https://www.dgp.toronto.edu/~ravin/papers/siggraph2007_spatialkeyframing.pdf</a>
 <br><a href="https://www.youtube.com/watch?v=7b5kUlhNS4o" target="_blank"> https://www.youtube.com/watch?v=7b5kUlhNS4o</a>
 <br><a href="https://www.autodesk.com/campaigns/makegames/create" target="_blank"> https://www.autodesk.com/campaigns/makegames/create</a>
 <br><a href="http://www.individual.utoronto.ca/imordatch/CSC490/" target="_blank"> http://www.individual.utoronto.ca/imordatch/CSC490/</a>
 <br><a href="https://zh.coursera.org/lecture/interactive-computer-graphics/4-3-spatial-key-framing-gQPxL" target="_blank"> https://zh.coursera.org/lecture/interactive-computer-graphics/4-3-spatial-key-framing-gQPxL</a>
-<a href="https://www.youtube.com/watch?v=YgoCp2tzRh0" target="_blank"> https://www.youtube.com/watch?v=YgoCp2tzRh0</a>
+<br><a href="https://www.youtube.com/watch?v=YgoCp2tzRh0" target="_blank"> https://www.youtube.com/watch?v=YgoCp2tzRh0</a>
 
 <h2 align="middle">Contributions</h2>
 <ul>
@@ -179,9 +199,16 @@
   <li>
     Andrew: Andrew worked on the interpolation method and debugging, as well as all the project deliverables.
   </li>
-
 </ul>
 
+
+<p> <b>final video:</b></p>
+<iframe width="640" height="480"
+src="https://www.youtube.com/embed/cvh4tJHQiFY">
+</iframe>
+
+<p> <b>finalpresentation slides:</b></p>
+<iframe src="https://docs.google.com/presentation/d/e/2PACX-1vRYXxuAsmbubMArrj901YElcqbmSqUzFt6Ta8G1Lgkus0-IEVXrz8SiO-cNs96KnJQ4R9eOfAiwcK1_/embed?start=false&loop=false&delayms=3000" frameborder="0" width="960" height="569" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
 
   </div>
 </body>
